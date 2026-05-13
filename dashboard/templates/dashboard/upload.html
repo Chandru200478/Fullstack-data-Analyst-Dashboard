@@ -1,0 +1,22 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<h2>Upload Dataset</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="file" name="file" accept=".csv,.xlsx,.pdf" required>
+
+    <select name="file_type">
+        <option value="csv">CSV</option>
+        <option value="excel">Excel</option>
+        <option value="pdf">PDF</option>
+    </select>
+
+<!--    <button type="submit">Upload</button>-->
+    <button class="btn">Upload</button>
+</form>
+
+{% endblock %}

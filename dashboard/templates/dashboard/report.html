@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { font-family: Arial; }
+h1 { text-align: center; }
+
+.card {
+    border: 1px solid #000;
+    padding: 10px;
+    margin: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Analytics Report</h1>
+
+<div class="card">
+    <p>Total: {{ total }}</p>
+    <p>Average: {{ mean }}</p>
+    <p>Max: {{ max }}</p>
+    <p>Min: {{ min }}</p>
+</div>
+
+<h3>Data Preview</h3>
+{{ table|safe }}
+
+</body>
+</html>

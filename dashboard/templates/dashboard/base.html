@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Analytics Dashboard</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+/* 🔥 THEMES */
+
+/* DARK (Default) */
+body.dark {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+
+/* LIGHT */
+body.light {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+/* GRADIENT PRO (Attractive Theme) */
+body.gradient {
+    background: linear-gradient(135deg, #1e3a8a, #9333ea);
+    color: white;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    color: #38bdf8;
+}
+
+/* CONTAINER */
+.container {
+    padding: 30px;
+}
+
+/* KPI CARDS */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* CHART GRID */
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-top: 25px;
+}
+
+/* CHART BOX */
+.chart-box {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 15px;
+    height: 300px;
+}
+
+/* BUTTON */
+.btn {
+    background: #38bdf8;
+    color: black;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* THEME SELECT */
+select {
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body class="dark" id="body">
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div>
+        <a href="/">Upload</a>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/analytics/">Analytics</a>
+    </div>
+
+    <!-- 🔥 THEME SWITCHER -->
+    <select onchange="changeTheme(this.value)">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+        <option value="gradient">Gradient Pro</option>
+    </select>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script>
+function changeTheme(theme) {
+    let body = document.getElementById("body");
+
+    body.classList.remove("dark", "light", "gradient");
+    body.classList.add(theme);
+}
+</script>
+
+</body>
+</html>

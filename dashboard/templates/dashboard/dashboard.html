@@ -1,0 +1,120 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<h2>📊 Power BI Dashboard</h2>
+
+
+
+<!-- 👉 ADD BUTTON HERE -->
+<a href="/export-pdf/" class="btn">Download PDF Report</a>
+
+<!-- COLUMN SELECT -->
+<form method="GET">
+    <select name="column">
+        {% for c in columns %}
+        <option value="{{ c }}" {% if c == selected %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn">Analyze</button>
+</form>
+
+<!-- KPI CARDS -->
+<div class="grid">
+    <div class="card"><h3>Total</h3><h1>{{ total }}</h1></div>
+    <div class="card"><h3>Mean</h3><h1>{{ mean }}</h1></div>
+    <div class="card"><h3>Median</h3><h1>{{ median }}</h1></div>
+    <div class="card"><h3>Std Dev</h3><h1>{{ std }}</h1></div>
+    <div class="card"><h3>Max</h3><h1>{{ max }}</h1></div>
+    <div class="card"><h3>Min</h3><h1>{{ min }}</h1></div>
+    <div class="card"><h3>Count</h3><h1>{{ count }}</h1></div>
+    <div class="card"><h3>Growth</h3><h1>{{ growth }}%</h1></div>
+</div>
+
+<!-- CHART GRID -->
+<div class="chart-grid">
+
+<div class="chart-box"><h4>Bar Chart</h4><canvas id="barChart"></canvas></div>
+<div class="chart-box"><h4>Line Chart</h4><canvas id="lineChart"></canvas></div>
+<div class="chart-box"><h4>Area (Trend Ribbon)</h4><canvas id="areaChart"></canvas></div>
+<div class="chart-box"><h4>Pie Chart</h4><canvas id="pieChart"></canvas></div>
+<div class="chart-box"><h4>Histogram</h4><canvas id="histChart"></canvas></div>
+<div class="chart-box"><h4>Multi Column</h4><canvas id="multiChart"></canvas></div>
+
+</div>
+
+<h3>📋 Data Table</h3>
+<div style="overflow:auto;">
+    {{ table|safe }}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let labels = {{ labels|safe }};
+let values = {{ values|safe }};
+
+// BAR
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ label:'Bar', data: values }] }
+});
+
+// LINE
+new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: { labels: labels, datasets: [{ label:'Line', data: values }] }
+});
+
+// AREA (Ribbon Style)
+new Chart(document.getElementById('areaChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label:'Area',
+            data: values,
+            fill: true
+        }]
+    }
+});
+
+// PIE
+new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: { labels: labels.slice(0,10), datasets: [{ data: values.slice(0,10) }] }
+});
+
+// HISTOGRAM
+let bins = {};
+values.forEach(v=>{
+    let b = Math.floor(v/10)*10;
+    bins[b]=(bins[b]||0)+1;
+});
+
+new Chart(document.getElementById('histChart'), {
+    type:'bar',
+    data:{ labels:Object.keys(bins), datasets:[{ data:Object.values(bins) }] }
+});
+
+// MULTI COLUMN
+let multiData = {{ multi_data|safe }};
+let datasets = [];
+
+for (let key in multiData){
+    datasets.push({
+        label: key,
+        data: multiData[key]
+    });
+}
+
+new Chart(document.getElementById('multiChart'), {
+    type:'bar',
+    data:{
+        labels: {{ multi_labels|safe }},
+        datasets: datasets
+    }
+});
+</script>
+
+{% endblock %}

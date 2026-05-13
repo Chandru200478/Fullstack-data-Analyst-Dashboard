@@ -1,0 +1,104 @@
+
+
+
+
+
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<h2>📈 Advanced Analytics</h2>
+
+{% if error %}
+<div class="card">{{ error }}</div>
+{% endif %}
+
+<!-- 🔍 FILTER -->
+<form method="GET" style="margin-bottom:20px;">
+    <select name="column">
+        {% for col in columns %}
+        <option value="{{ col }}" {% if col == selected %}selected{% endif %}>
+            {{ col }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button class="btn">Analyze</button>
+</form>
+
+<!-- KPI -->
+<div class="grid">
+    <div class="card">Total: {{ total }}</div>
+    <div class="card">Mean: {{ mean }}</div>
+    <div class="card">Median: {{ median }}</div>
+    <div class="card">Std: {{ std }}</div>
+    <div class="card">Variance: {{ var }}</div>
+    <div class="card">Min: {{ min }}</div>
+    <div class="card">Max: {{ max }}</div>
+    <div class="card">Growth: {{ growth }}%</div>
+</div>
+
+<!-- INSIGHT -->
+<div class="card">
+    <h3>Insight</h3>
+    <p>{{ insight }}</p>
+</div>
+
+<!-- TOP / BOTTOM -->
+<div class="chart-grid">
+    <div class="card">
+        <h3>Top 5</h3>
+        <ul>{% for v in top5 %}<li>{{ v }}</li>{% endfor %}</ul>
+    </div>
+    <div class="card">
+        <h3>Bottom 5</h3>
+        <ul>{% for v in bottom5 %}<li>{{ v }}</li>{% endfor %}</ul>
+    </div>
+</div>
+
+<!-- HISTOGRAM -->
+<div class="chart-box">
+    <canvas id="histChart"></canvas>
+</div>
+
+<!-- TREND -->
+<div class="chart-box">
+    <canvas id="trendChart"></canvas>
+</div>
+
+<!-- CORRELATION -->
+<div class="card">
+    <h3>Correlation</h3>
+    {{ correlation|safe }}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Histogram
+new Chart(document.getElementById("histChart"), {
+    type: "bar",
+    data: {
+        labels: {{ bin_labels|safe }},
+        datasets: [{
+            label: "Distribution",
+            data: {{ bin_values|safe }}
+        }]
+    }
+});
+
+// Trend
+new Chart(document.getElementById("trendChart"), {
+    type: "line",
+    data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+            label: "Trend",
+            data: {{ values|safe }},
+            fill: true
+        }]
+    }
+});
+</script>
+
+{% endblock %}
